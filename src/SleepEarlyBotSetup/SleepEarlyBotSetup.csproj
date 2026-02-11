@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <StartupObject>SleepEarlyBotSetup.Program</StartupObject>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <!-- Publish defaults: single-file + self-contained for Windows x64. -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <PublishTrimmed>false</PublishTrimmed>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <!-- Embed a self-contained, single-file agent payload into this Setup EXE. -->
+  <PropertyGroup>
+    <EmbedAgentPayload Condition="'$(EmbedAgentPayload)'=='' and '$(Configuration)'=='Release'">true</EmbedAgentPayload>
+    <EmbedAgentPayload Condition="'$(EmbedAgentPayload)'==''">false</EmbedAgentPayload>
+
+    <EmbeddedAgentRid Condition="'$(EmbeddedAgentRid)'=='' and '$(RuntimeIdentifier)'!=''">$(RuntimeIdentifier)</EmbeddedAgentRid>
+    <EmbeddedAgentRid Condition="'$(EmbeddedAgentRid)'==''">win-x64</EmbeddedAgentRid>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SleepEarlyBotShared\SleepEarlyBotShared.csproj" />
+  </ItemGroup>
+
+  <!-- When enabled, embed the published agent EXE into the Setup assembly. -->
+  <ItemGroup Condition="'$(EmbedAgentPayload)'=='true'">
+    <EmbeddedResource Include="$(BaseIntermediateOutputPath)embedded-agent\SleepEarlyBot.exe"
+                      LogicalName="Agent.SleepEarlyBot.exe" />
+  </ItemGroup>
+
+  <!-- Publish agent and embed it as a manifest resource in Setup. -->
+  <!-- Must run BEFORE resource name generation, not just before compilation. -->
+  <Target Name="PublishAgentPayload" BeforeTargets="PrepareForBuild" Condition="'$(EmbedAgentPayload)'=='true'">
+    <PropertyGroup>
+      <_AgentPublishDir>$(BaseIntermediateOutputPath)embedded-agent</_AgentPublishDir>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(_AgentPublishDir)" />
+
+    <Exec Command="dotnet publish &quot;$(MSBuildProjectDirectory)\..\SleepEarlyBot\SleepEarlyBot.csproj&quot; -c $(Configuration) -r $(EmbeddedAgentRid) -o &quot;$(_AgentPublishDir)&quot; -p:SelfContained=true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:PublishTrimmed=false" />
+  </Target>
+
+</Project>
+

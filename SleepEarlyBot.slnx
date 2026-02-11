@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SleepEarlyBotShared/SleepEarlyBotShared.csproj" />
+    <Project Path="src/SleepEarlyBot/SleepEarlyBot.csproj" />
+    <Project Path="src/SleepEarlyBotSetup/SleepEarlyBotSetup.csproj" />
+  </Folder>
+</Solution>

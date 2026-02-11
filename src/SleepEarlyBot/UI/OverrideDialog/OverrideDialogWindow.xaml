@@ -1,0 +1,55 @@
+<Window x:Class="SleepEarlyBot.UI.OverrideDialog.OverrideDialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Sleep Bot Override"
+        Width="520"
+        Height="360"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Type the commitment phrase exactly:"
+                   FontWeight="SemiBold"
+                   FontSize="14" />
+
+        <TextBox x:Name="CommitmentPhraseText"
+                 Grid.Row="1"
+                 Margin="0,8,0,0"
+                 Height="60"
+                 IsReadOnly="True"
+                 TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Auto"/>
+
+        <TextBlock Grid.Row="2"
+                   Margin="0,12,0,0"
+                   Text="Type it below, then provide a reason:"
+                   FontWeight="SemiBold"
+                   FontSize="14" />
+
+        <StackPanel Grid.Row="3" Margin="0,8,0,0">
+            <TextBox x:Name="TypedCommitment"
+                     Height="60"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     Margin="0,0,0,10"
+                     />
+
+            <TextBox x:Name="ReasonBox"
+                     Height="120"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     />
+        </StackPanel>
+
+        <DockPanel Grid.Row="4" Margin="0,12,0,0" LastChildFill="False">
+            <Button Content="Cancel" Width="90" Click="OnCancel" DockPanel.Dock="Right" Margin="8,0,0,0"/>
+            <Button Content="Submit Override" Width="130" Click="OnSubmit" DockPanel.Dock="Right"/>
+        </DockPanel>
+    </Grid>
+</Window>
